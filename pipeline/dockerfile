@@ -1,0 +1,22 @@
+FROM python:3.13-slim
+
+# Install uv
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /bin/
+
+
+# Set working directory
+WORKDIR /code
+
+# Add virtual environment to PATH so we can use installed packages
+ENV PATH="/app/.venv/bin:$PATH"
+
+# Copy dependency files first (better layer caching)
+COPY "pyproject.toml" "uv.lock" ".python-version" ./
+# Install dependencies from lock file (ensures reproducible builds)
+RUN uv sync --no-dev
+
+# 4. Copy the actual Python script
+COPY main.py .
+
+# 5. Use 'uv run' so it uses the virtual environment!
+ENTRYPOINT ["uv", "run", "main.py"]
