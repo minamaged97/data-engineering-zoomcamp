@@ -16,7 +16,7 @@ COPY "pyproject.toml" "uv.lock" ".python-version" ./
 RUN uv sync --no-dev
 
 # 4. Copy the actual Python script
-COPY main.py .
+COPY ingest_data.py .
 
 # 5. Use 'uv run' so it uses the virtual environment!
-ENTRYPOINT ["uv", "run", "main.py"]
+ENTRYPOINT ["uv", "run", "ingest_data.py"]
